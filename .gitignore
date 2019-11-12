@@ -1,0 +1,14 @@
+*.csv
+*.exe
+*.i
+*.o
+*.s
+*.raw
+__pycache__
+*.out
+*.pyc
+*.gprof
+.\#*
+\#*
+core
+*~
