@@ -9,7 +9,7 @@ class ThisLab(LabSpec):
         super(ThisLab, self).__init__(
             lab_name = "A test lab",
             input_files = ['*.inp'],
-            output_files = ['*.out'],
+            output_files = ['*.out', '*.cp'],
             default_cmd = ['make', 'default'],
             repo = "https://github.com/NVSL/CSE141pp-Lab-Characterizing-A-Perceptron.git",
             reference_tag = "314bfbd09ab3a28b446742234851eeef2c29dcba",
