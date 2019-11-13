@@ -1,3 +1,4 @@
+# sensible default
 default: all
 
 # load lab preliminaries
@@ -9,7 +10,7 @@ PROTECTED_OPTION=safe!
 # load user config
 include $(BUILD)config.env
 
-# Implement an configuration option
+# Implement an configuration option before loading build infrastructure
 ifeq ($(TEST_OPTION),first)
 OPT_VAL=1
 endif
@@ -30,6 +31,8 @@ CMD_LINE_ARGS=--calc double=magic*2 --engine PAPI --stat inst_count=PAPI_TOT_INS
 MESSAGE=no devel
 endif
 
+# Targets defined by the lab creator
+
 all: opt_val.out message.out protected.out answer.out 1.out code.out 
 
 opt_val.out: 
@@ -41,19 +44,21 @@ protected.out:
 answer.out: 
 	echo $(THE_ANSWER) >> $@
 
+# consume an input
 1.out:$(BUILD)1.inp
 	cp $^ $@
 
+# build something
 %.exe : $(BULID)%.o 
 	$(CXX) $^ $(LDFLAGS) -o $@
 
+# clean up
 clean: lab-clean
 lab-clean:
 	rm -rf *.out
 
-# include other rules
-include local.mk
-
-
+# This is just here for the test lab.  Although regression tests for a lab is not a bad idea!
 test: test.bats Makefile
 	bats test.bats
+
+# Additional rules created by students go here (or wherever.  Changes to this file are ignored by the autograder.)
