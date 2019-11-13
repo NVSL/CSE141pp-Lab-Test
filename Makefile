@@ -48,6 +48,10 @@ answer.out:
 1.out:$(BUILD)1.inp
 	cp $^ $@
 
+# wierd command to test make target filtering
+1@.out:$(BUILD)1.inp
+	cp $^ $@
+
 # build something
 %.exe : $(BULID)%.o 
 	$(CXX) $^ $(LDFLAGS) -o $@
