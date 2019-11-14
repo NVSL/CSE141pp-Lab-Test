@@ -2,6 +2,7 @@
 #-*- shell-script -*-
 
 @test "command filter" {
+    archlab_check --engine papi || skip
     ! run.py --no-validate --solution solution -- make a\$
     run.py --no-validate --solution solution -- make opt_val.out
     ! run.py --no-validate --solution solution -- ls
@@ -12,6 +13,7 @@
 }
 
 @test "run.py solution" {
+    archlab_check --engine papi || skip
     run.py --no-validate --solution solution
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
@@ -22,6 +24,7 @@
 }
 
 @test "run.py json solution" {
+    archlab_check --engine papi || skip
     run.py --no-validate --json --nop > job.json
     run.py --run-json job.json
     [ "$(cat opt_val.out)" = '1' ]
@@ -33,6 +36,7 @@
 
 
 @test "run.py docker solution" {
+    archlab_check --engine papi || skip
     run.py --no-validate --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
@@ -42,6 +46,7 @@
 }
 
 @test "run.py docker starter" {
+    archlab_check --engine papi || skip
     run.py --no-validate --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
@@ -52,6 +57,7 @@
 
 
 @test "run.py pipe starter code" {
+    archlab_check --engine papi || skip
     run.py --no-validate --json --nop --solution . | run.py --run-json 
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
@@ -79,6 +85,7 @@
 }
 
 @test "vanilla config" {
+    archlab_check --engine papi || skip
     make clean;
     make
     [ "$(cat opt_val.out)" = '0' ]
@@ -90,6 +97,7 @@
 }
 
 @test "solution config" {
+    archlab_check --engine papi || skip
     make clean;
     LAB_SUBMISSION_DIR=solution make
     [ "$(cat opt_val.out)" = '1' ]
@@ -109,6 +117,7 @@
 }
 
 @test "just code" {
+    archlab_check --engine papi || skip
     make clean;
     make code.exe
     ./code.exe --calc double=magic*2
