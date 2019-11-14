@@ -9,7 +9,7 @@ class ThisLab(LabSpec):
         super(ThisLab, self).__init__(
             lab_name = "A test lab",
             input_files = ['*.inp', 'config.env'],
-            output_files = ['*.out', '*.cp', 'code-stats.csv'],
+            output_files = ['*.out', '*.cp', 'code-stats.csv','*.gprof'],
             default_cmd = ['make'],
             clean_cmd = ['make', 'clean'],
             config_file = 'config.env',

@@ -1,6 +1,8 @@
 #!/usr/bin/env bats
 #-*- shell-script -*-
 
+
+
 @test "command filter" {
     archlab_check --engine papi || skip
     ! run.py --no-validate --solution solution -- make a\$
@@ -10,6 +12,17 @@
     run.py  --no-validate --solution solution -- special1
     ! run.py  --no-validate --solution solution -- maek foo a=b
     
+}
+
+@test "run.py devel gprof" {
+    make clean
+    DEVEL_MODE=yes GPROF=yes run.py --no-validate --solution .
+    [ "$(cat message.out)" = "yes devel" ]
+    [ "$(cat protected.out)" = 'safe!' ]
+    [ "$(cat answer.out)" = 'student answer' ]
+    [ "$(cat 1.out)" = '1' ]
+    [ -e code.gprof ]
+    grep -q WallTime code-stats.csv
 }
 
 @test "run.py solution" {
@@ -62,16 +75,6 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
     grep -q inst_count code-stats.csv
-}
-
-@test "run.py devel" {
-    make clean
-    DEVEL_MODE=yes run.py --no-validate --solution .
-    [ "$(cat message.out)" = "yes devel" ]
-    [ "$(cat protected.out)" = 'safe!' ]
-    [ "$(cat answer.out)" = 'student answer' ]
-    [ "$(cat 1.out)" = '1' ]
-    grep -q WallTime code-stats.csv
 }
 
 @test "run.py devel cmdline" {
