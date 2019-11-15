@@ -10,6 +10,7 @@
     [ "$(cat 1.out)" = '1' ]
     [ -e code.gprof ]
     [ -e regression.out ]
+    [ -e regression.json ]
     [ -e out.png ]
     cmp in.png out.png
     #grep -vq FAILED regression.out # gprof makes run_tests.exe segfault...
@@ -44,6 +45,7 @@
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
     [ -e regression.out ]
+    [ -e regression.json ]
     grep -vq FAILED regression.out
     grep -q magic results.json
     grep -q inst_count code-stats.csv
