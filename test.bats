@@ -1,6 +1,20 @@
 #!/usr/bin/env bats
 #-*- shell-script -*-
 
+@test "run.py devel gprof" {
+    make clean
+    DEVEL_MODE=yes GPROF=yes run.py --no-validate --solution .
+    [ "$(cat message.out)" = "yes devel" ]
+    [ "$(cat protected.out)" = 'safe!' ]
+    [ "$(cat answer.out)" = 'student answer' ]
+    [ "$(cat 1.out)" = '1' ]
+    [ -e code.gprof ]
+    [ -e regression.out ]
+    [ -e out.png ]
+    cmp in.png out.png
+    #grep -vq FAILED regression.out # gprof makes run_tests.exe segfault...
+    grep -q WallTime code-stats.csv
+}
 
 
 @test "command filter" {
@@ -14,16 +28,13 @@
     
 }
 
-@test "run.py devel gprof" {
+@test "regression test" {
     make clean
-    DEVEL_MODE=yes GPROF=yes run.py --no-validate --solution .
-    [ "$(cat message.out)" = "yes devel" ]
-    [ "$(cat protected.out)" = 'safe!' ]
-    [ "$(cat answer.out)" = 'student answer' ]
-    [ "$(cat 1.out)" = '1' ]
-    [ -e code.gprof ]
-    grep -q WallTime code-stats.csv
+    make run_tests.exe
+    ! REGRESSION_FAIL=y ./run_tests.exe
+    ./run_tests.exe
 }
+
 
 @test "run.py solution" {
     archlab_check --engine papi || skip
@@ -32,6 +43,8 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
+    [ -e regression.out ]
+    grep -vq FAILED regression.out
     grep -q magic results.json
     grep -q inst_count code-stats.csv
 }
@@ -44,6 +57,7 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
+    [ -e regression.out ]
     grep -q inst_count code-stats.csv
 }
 
@@ -55,6 +69,7 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
+    [ -e regression.out ]
     grep -q inst_count code-stats.csv
 }
 
@@ -65,6 +80,7 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
+    [ -e regression.out ]
     grep -q inst_count code-stats.csv
 }
 
@@ -74,6 +90,7 @@
     run.py --no-validate --json --nop --solution . | run.py --run-json 
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
+    [ -e regression.out ]
     grep -q inst_count code-stats.csv
 }
 
@@ -84,6 +101,8 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
     [ "$(cat 1.out)" = '1' ]
+    [ -e regression.out ]
+    grep -vq FAILED regression.out
     grep -q WallTime code-stats.csv
 }
 
@@ -96,6 +115,7 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
     [ "$(cat 1.out)" = '1' ]
+    [ -e regression.out ]
     grep -q inst_count code-stats.csv
 }
 
@@ -108,14 +128,16 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
+    [ -e regression.out ]
     grep -q inst_count code-stats.csv
 }
 
 @test "devel config" {
     make clean;
-    DEVEL_MODE=yes make
+    DEVEL_MODE=yes REGRESSION_FAIL=y make
     [ "$(cat message.out)" = "yes devel" ]
     [ "$(cat protected.out)" = 'safe!' ]
+    grep -q FAILED regression.out
     grep -q WallTime code-stats.csv
 }
 

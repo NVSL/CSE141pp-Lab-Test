@@ -1,8 +1,11 @@
 # sensible default
 default: all
 
+
 # load lab preliminaries
 include $(ARCHLAB_ROOT)/lab.make
+
+USER_CFLAGS=-I$(CANELA_ROOT)/googletest/googletest/include
 
 # this should not be alterable, because it's not allowed by lab.py
 PROTECTED_OPTION=safe!
@@ -33,7 +36,16 @@ endif
 
 # Targets defined by the lab creator
 
-all: opt_val.out message.out protected.out answer.out 1.out code.out 
+all: opt_val.out message.out protected.out answer.out 1.out code.out regression.out out.png
+
+run_tests.exe: run_tests.o
+	$(CXX) $^ $(LDFLAGS) -L$(CANELA_ROOT)/googletest/lib -lgtest -lgtest_main  -o $@
+
+regression.out: run_tests.exe
+	./run_tests.exe > $@ || true
+
+out.png: in.png
+	cp $< $@
 
 opt_val.out: 
 	echo $(OPT_VAL) > $@
@@ -59,10 +71,8 @@ answer.out:
 # clean up
 clean: lab-clean
 lab-clean:
-	rm -rf *.out
+	rm -rf *.out run_tests.exe
 
-# This is just here for the test lab.  Although regression tests for a lab is not a bad idea!
+#  lab test suite.
 test: test.bats Makefile
 	bats test.bats
-
-# Additional rules created by students go here (or wherever.  Changes to this file are ignored by the autograder.)

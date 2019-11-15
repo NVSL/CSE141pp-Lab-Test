@@ -8,8 +8,8 @@ class ThisLab(LabSpec):
     def __init__(self):
         super(ThisLab, self).__init__(
             lab_name = "A test lab",
-            input_files = ['*.inp', 'config.env'],
-            output_files = ['*.out', '*.cp', 'code-stats.csv','*.gprof'],
+            input_files = ['*.inp', 'config.env', 'png.in'],
+            output_files = ['*.out', '*.cp', 'code-stats.csv','*.gprof', 'regression.out', 'png.out'],
             default_cmd = ['make'],
             clean_cmd = ['make', 'clean'],
             config_file = 'config.env',
