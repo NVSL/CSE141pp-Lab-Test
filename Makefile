@@ -1,17 +1,50 @@
 # sensible default
 default: all
 
-
-# load lab preliminaries
-include $(ARCHLAB_ROOT)/lab.make
-
-USER_CFLAGS=-I$(CANELA_ROOT)/googletest/googletest/include
-
 # this should not be alterable, because it's not allowed by lab.py
 PROTECTED_OPTION=safe!
 
+CLEANUP=*.out run_tests.exe
+
+################
+# load lab preliminaries
+include $(ARCHLAB_ROOT)/lab.make
+
+DEBUG?=no
+
+C_OPTS=$(OPTIMIZE)
+
+USER_CFLAGS=-I$(CANELA_ROOT)/googletest/googletest/include -I$(CANELA_ROOT)/googletest/googletest/include
+
 # load user config
 include $(BUILD)config.env
+
+regression.out: run_tests.exe
+	./run_tests.exe > $@ || true
+
+# Build infrastructure
+include $(ARCHLAB_ROOT)/compile.make
+
+run_tests.exe: run_tests.o
+	$(CXX) $^ $(LDFLAGS) -L$(CANELA_ROOT)/googletest/lib -lgtest -lgtest_main  -o $@
+
+# build something
+%.exe : $(BULID)%.o main.o
+	$(CXX) $^ $(LDFLAGS) -o $@
+
+
+# clean up
+.PHONY: clean
+clean: lab-clean
+lab-clean:
+	rm -rf $(CLEANUP)
+
+#  lab test suite.
+.PHONY: test
+test: 
+	bats test.bats
+
+###############
 
 # Implement an configuration option before loading build infrastructure
 ifeq ($(TEST_OPTION),first)
@@ -21,9 +54,6 @@ ifeq ($(TEST_OPTION),second)
 OPT_VAL=2
 endif
 OPT_VAL?=0
-
-# Build infrastructure
-include $(ARCHLAB_ROOT)/compile.make
 
 # Handle devel mode
 ifeq ($(DEVEL_MODE),yes)
@@ -37,12 +67,6 @@ endif
 # Targets defined by the lab creator
 
 all: opt_val.out message.out protected.out answer.out 1.out code.out regression.out out.png
-
-run_tests.exe: run_tests.o
-	$(CXX) $^ $(LDFLAGS) -L$(CANELA_ROOT)/googletest/lib -lgtest -lgtest_main  -o $@
-
-regression.out: run_tests.exe
-	./run_tests.exe > $@ || true
 
 out.png: in.png
 	cp $< $@
@@ -64,15 +88,4 @@ answer.out:
 1@.out:$(BUILD)1.inp
 	cp $^ $@
 
-# build something
-%.exe : $(BULID)%.o 
-	$(CXX) $^ $(LDFLAGS) -o $@
 
-# clean up
-clean: lab-clean
-lab-clean:
-	rm -rf *.out run_tests.exe
-
-#  lab test suite.
-test: test.bats Makefile
-	bats test.bats
