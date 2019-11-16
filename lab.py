@@ -23,7 +23,8 @@ class ThisLab(LabSpec):
                 "C_OPTS": "",
                 "COMPILER": "",
                 "THE_ANSWER": "",
-                "TEST_OPTION": ""
+                "TEST_OPTION": "",
+                "DEVEL_MODE": ""
             }
         )
 
