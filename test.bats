@@ -1,6 +1,11 @@
 #!/usr/bin/env bats
 #-*- shell-script -*-
 
+@test "basic config" {
+    [ "$CANELA_ROOT." != "." ]
+    [ "$ARCHLAB_ROOT." != "." ]
+}
+
 @test "runlab devel gprof" {
     make clean
     DEVEL_MODE=yes GPROF=yes runlab --no-validate --solution .
