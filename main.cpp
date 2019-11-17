@@ -9,7 +9,6 @@
 namespace po = boost::program_options;
 
 int main(int argc, char *argv[]) {
-
 	
 	uint64_t magic;
 	archlab_add_option<uint64_t>("magic",  magic, 4096 ,  "magic number.");
