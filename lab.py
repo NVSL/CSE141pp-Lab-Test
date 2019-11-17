@@ -13,7 +13,7 @@ class ThisLab(LabSpec):
             default_cmd = ['make'],
             clean_cmd = ['make', 'clean'],
             config_file = 'config.env',
-            repo = "https://github.com/NVSL/CSE141pp-Lab-Characterizing-A-Perceptron.git",
+            repo = "https://github.com/NVSL/CSE141pp-Lab-Test.git",
             reference_tag = "314bfbd09ab3a28b446742234851eeef2c29dcba",
             time_limit = 50,
             valid_options = {

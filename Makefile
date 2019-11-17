@@ -4,7 +4,7 @@ default: all
 # this should not be alterable, because it's not allowed by lab.py
 PROTECTED_OPTION=safe!
 
-CLEANUP=*.out run_tests.exe
+CLEANUP=*.out run_tests.exe out.png
 
 include $(ARCHLAB_ROOT)/cse141.make
 
