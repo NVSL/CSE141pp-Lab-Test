@@ -1,9 +1,9 @@
 #!/usr/bin/env bats
 #-*- shell-script -*-
 
-@test "run.py devel gprof" {
+@test "runlab devel gprof" {
     make clean
-    DEVEL_MODE=yes GPROF=yes run.py --no-validate --solution .
+    DEVEL_MODE=yes GPROF=yes runlab --no-validate --solution .
     [ "$(cat message.out)" = "yes devel" ]
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
@@ -20,12 +20,12 @@
 
 @test "command filter" {
     archlab_check --engine papi || skip
-    ! run.py --no-validate --solution solution -- make a\$
-    run.py --no-validate --solution solution -- make opt_val.out
-    ! run.py --no-validate --solution solution -- ls
-    run.py  --no-validate --solution solution -- special1
-    run.py  --no-validate --solution solution -- special1
-    ! run.py  --no-validate --solution solution -- maek foo a=b
+    ! runlab --no-validate --solution solution -- make a\$
+    runlab --no-validate --solution solution -- make opt_val.out
+    ! runlab --no-validate --solution solution -- ls
+    runlab  --no-validate --solution solution -- special1
+    runlab  --no-validate --solution solution -- special1
+    ! runlab  --no-validate --solution solution -- maek foo a=b
     
 }
 
@@ -37,9 +37,9 @@
 }
 
 
-@test "run.py solution" {
+@test "runlab solution" {
     archlab_check --engine papi || skip
-    run.py --no-validate --solution solution
+    runlab --no-validate --solution solution
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
@@ -51,10 +51,10 @@
     grep -q inst_count code-stats.csv
 }
 
-@test "run.py json solution" {
+@test "runlab json solution" {
     archlab_check --engine papi || skip
-    run.py --no-validate --json --nop > job.json
-    run.py --run-json job.json
+    runlab --no-validate --json --nop > job.json
+    runlab --run-json job.json
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
@@ -64,9 +64,9 @@
 }
 
 
-@test "run.py docker solution" {
+@test "runlab docker solution" {
     archlab_check --engine papi || skip
-    run.py --no-validate --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
+    runlab --no-validate --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
@@ -75,9 +75,9 @@
     grep -q inst_count code-stats.csv
 }
 
-@test "run.py docker starter" {
+@test "runlab docker starter" {
     archlab_check --engine papi || skip
-    run.py --no-validate --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
+    runlab --no-validate --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
@@ -87,18 +87,18 @@
 }
 
 
-@test "run.py pipe starter code" {
+@test "runlab pipe starter code" {
     archlab_check --engine papi || skip
-    run.py --no-validate --json --nop --solution . | run.py --run-json 
+    runlab --no-validate --json --nop --solution . | runlab --run-json 
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
     [ -e regression.out ]
     grep -q inst_count code-stats.csv
 }
 
-@test "run.py devel cmdline" {
+@test "runlab devel cmdline" {
     make clean
-    run.py --no-validate --devel --solution .
+    runlab --no-validate --devel --solution .
     [ "$(cat message.out)" = "yes devel" ]
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
