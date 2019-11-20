@@ -32,3 +32,5 @@ STDOUT
 __pycache__
 build
 core
+com
+out.png
