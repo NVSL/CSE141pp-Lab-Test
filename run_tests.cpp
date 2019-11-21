@@ -1,6 +1,10 @@
 #include <iostream>
 #include "gtest/gtest.h"
 
+// run_Test.cpp files use googletest (https://github.com/google/googletest).
+//
+// The idea is that this file should test the students code, not the
+// lab infrastructure, but do what you want :-)
 class Tests :  public ::testing::Test {
 	
 };
