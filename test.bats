@@ -57,8 +57,7 @@
 }
 
 @test "runlab json solution" {
-    archlab_check --engine papi || skip
-    runlab --no-validate --json --nop > job.json
+    runlab --no-validate --json --devel --nop > job.json
     runlab --run-json job.json
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
@@ -70,8 +69,7 @@
 
 
 @test "runlab docker solution" {
-    archlab_check --engine papi || skip
-    runlab --no-validate --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
+    runlab --no-validate  --devel --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
@@ -81,8 +79,7 @@
 }
 
 @test "runlab docker starter" {
-    archlab_check --engine papi || skip
-    runlab --no-validate --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
+    runlab --no-validate  --devel --solution solution --docker --docker-image cse141pp/submission-runner:0.10 --pristine
     [ "$(cat opt_val.out)" = '1' ]
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
@@ -93,8 +90,7 @@
 
 
 @test "runlab pipe starter code" {
-    archlab_check --engine papi || skip
-    runlab --no-validate --json --nop --solution . | runlab --run-json 
+    runlab --no-validate  --devel --json --nop --solution . | runlab --run-json 
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
     [ -e regression.out ]
