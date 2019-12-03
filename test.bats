@@ -4,6 +4,7 @@
 @test "basic config" {
     [ "$CANELA_ROOT." != "." ]
     [ "$ARCHLAB_ROOT." != "." ]
+    runlab --help
 }
 
 @test "command filter" {
