@@ -138,63 +138,23 @@
 }
 
 
-@test "pubsub emulation" {
+@test "cloud running" {
     pushd $CONFIG_REPO_ROOT
-    export DEPLOYMENT_MODE=EMULATION
     . config.sh
     popd
-
-    runlab.d --just-once -v  &
-    runlab --devel --solution . --remote  
-
-    [ "$(cat message.out)" = "yes devel" ]
-    [ "$(cat protected.out)" = 'safe!' ]
-    [ "$(cat answer.out)" = 'student answer' ]
-    [ "$(cat 1.out)" = '1' ]
-    [ -e regression.out ]
-    [ -e regression.json ]
-    [ -e out.png ]
-    cmp in.png out.png
-    grep -q WallTime code-stats.csv
+    for CLOUD_MODE in EMULATION CLOUD; do
+	reconfig
+	runlab.d --just-once -v  &
+	runlab --devel --solution . --remote  
+	
+	[ "$(cat message.out)" = "yes devel" ]
+	[ "$(cat protected.out)" = 'safe!' ]
+	[ "$(cat answer.out)" = 'student answer' ]
+	[ "$(cat 1.out)" = '1' ]
+	[ -e regression.out ]
+	[ -e regression.json ]
+	[ -e out.png ]
+	cmp in.png out.png
+	grep -q WallTime code-stats.csv
+    done
 }
-
-@test "pubsub testing" {
-    pushd $CONFIG_REPO_ROOT
-    export DEPLOYMENT_MODE=TESTING
-    . config.sh
-    popd
-
-    runlab.d --just-once &
-    runlab --devel --solution . --remote 
-
-    [ "$(cat message.out)" = "yes devel" ]
-    [ "$(cat protected.out)" = 'safe!' ]
-    [ "$(cat answer.out)" = 'student answer' ]
-    [ "$(cat 1.out)" = '1' ]
-    [ -e regression.out ]
-    [ -e regression.json ]
-    [ -e out.png ]
-    cmp in.png out.png
-    grep -q WallTime code-stats.csv
-}
-
-@test "pubsub deployed" {
-    [ -v TEST_DEPLOYMENT ] || skip Testing deployment can interfere with running real jobs.
-    pushd $CONFIG_REPO_ROOT
-    export DEPLOYMENT_MODE=DEPLOYED
-    . config.sh
-    popd
-    runlab.d --just-once &
-    runlab --devel --solution .  --remote 
-
-    [ "$(cat message.out)" = "yes devel" ]
-    [ "$(cat protected.out)" = 'safe!' ]
-    [ "$(cat answer.out)" = 'student answer' ]
-    [ "$(cat 1.out)" = '1' ]
-    [ -e regression.out ]
-    [ -e regression.json ]
-    [ -e out.png ]
-    cmp in.png out.png
-    grep -q WallTime code-stats.csv
-}
-
