@@ -38,6 +38,8 @@ class ThisLab(LabSpec):
         expect.
 
         """
+        self.run_gradescope_tests(result, GradedRegressions)
+        
         r = []
         try:
             r.append(dict(name='magic', value=self.csv_extract_by_line(result.files['code-stats.csv'], 'magic')))
@@ -65,3 +67,34 @@ class ThisLab(LabSpec):
 
         # this is a helper that only allows simple calls to make.  Variables cannot be set.
         return self.make_target_filter(command)
+
+import unittest
+import subprocess
+from gradescope_utils.autograder_utils.decorators import weight
+class GradedRegressions(unittest.TestCase):
+    def go(self, label):
+        try:
+            subprocess.check_call(["./run_tests.exe", f"--gtest_filter=.*{label}.*"],timeout=1)
+        except:
+            self.assertTrue(False)
+        
+    @weight(1)
+    def test_level_0(self):
+        self.go("level_0")
+
+    @weight(1)
+    def test_level_1(self):
+        self.go("level_1")
+
+    @weight(1)
+    def test_level_2(self):
+        self.go("level_2")
+        
+    @weight(1)
+    def test_level_3(self):
+        self.go("level_3")
+
+    @weight(1)
+    def test_level_4(self):
+        self.go("level_4")
+
