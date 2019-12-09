@@ -72,29 +72,13 @@ import unittest
 import subprocess
 from gradescope_utils.autograder_utils.decorators import weight
 class GradedRegressions(unittest.TestCase):
-    def go(self, label):
+        
+    @weight(1)
+    def test_go(self):
         try:
-            subprocess.check_call(["./run_tests.exe", f"--gtest_filter=.*{label}.*"],timeout=1)
+            subprocess.check_call(["./run_tests.exe"],timeout=5)
         except:
             self.assertTrue(False)
-        
-    @weight(1)
-    def test_level_0(self):
-        self.go("level_0")
 
-    @weight(1)
-    def test_level_1(self):
-        self.go("level_1")
 
-    @weight(1)
-    def test_level_2(self):
-        self.go("level_2")
-        
-    @weight(1)
-    def test_level_3(self):
-        self.go("level_3")
-
-    @weight(1)
-    def test_level_4(self):
-        self.go("level_4")
 

@@ -102,7 +102,7 @@
     grep -q WallTime code-stats.csv
     jextract gradescope_test_output < results.json
     jextract gradescope_test_output execution_time  < results.json
-    [ "$(jextract gradescope_test_output score  < results.json)" == "5" ]
+    [ "$(jextract gradescope_test_output score  < results.json)" == "1" ]
     [ "$(jextract gradescope_test_output tests 0 score  < results.json)" == "1" ]
 }
 
