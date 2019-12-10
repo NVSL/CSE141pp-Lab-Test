@@ -12,7 +12,7 @@ class ThisLab(LabSpec):
         super(ThisLab, self).__init__(
             lab_name = "A test lab",
             short_name = "test-lab",
-            input_files = ['*.inp', 'config.env', 'png.in', 'code.cpp'],
+            input_files = ['*.inp', 'config.env', 'png.in', 'code.cpp', 'opt_cnn.hpp'],
             output_files = ['*.out', '*.cp', 'code-stats.csv','*.gprof', 'regression.out', 'out.png', 'regression.json'],
             default_cmd = ['make'],
             clean_cmd = ['make', 'clean'],
