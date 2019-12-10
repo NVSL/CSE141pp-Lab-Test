@@ -3,6 +3,9 @@
 # executes in the cloud.
 from ArchLab.Runner import LabSpec
 import functools
+import unittest
+import subprocess
+from gradescope_utils.autograder_utils.decorators import weight
 
 class ThisLab(LabSpec):
     def __init__(self):
@@ -38,7 +41,6 @@ class ThisLab(LabSpec):
         expect.
 
         """
-        self.run_gradescope_tests(result, GradedRegressions)
         
         r = []
         try:
@@ -68,17 +70,14 @@ class ThisLab(LabSpec):
         # this is a helper that only allows simple calls to make.  Variables cannot be set.
         return self.make_target_filter(command)
 
-import unittest
-import subprocess
-from gradescope_utils.autograder_utils.decorators import weight
-class GradedRegressions(unittest.TestCase):
-        
-    @weight(1)
-    def test_go(self):
-        try:
-            subprocess.check_call(["./run_tests.exe"],timeout=5)
-        except:
-            self.assertTrue(False)
+    class GradedRegressions(unittest.TestCase):
+
+        @weight(1)
+        def test_go(self):
+            try:
+                subprocess.check_call(["./run_tests.exe"],timeout=5)
+            except:
+                self.assertTrue(False)
 
 
 
