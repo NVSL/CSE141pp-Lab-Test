@@ -5,9 +5,13 @@ from ArchLab.Runner import LabSpec
 import functools
 import unittest
 import subprocess
-from gradescope_utils.autograder_utils.decorators import weight
+import parameterized
+from gradescope_utils.autograder_utils.decorators import weight, leaderboard, partial_credit
+from ArchLab.CSE141Lab import CSE141Lab # The labs for the class have lots in common, so we have base class.
+import logging as log
+import json
 
-class ThisLab(LabSpec):
+class ThisLab(CSE141Lab):
     def __init__(self):
         super(ThisLab, self).__init__(
             lab_name = "A test lab",
@@ -16,10 +20,9 @@ class ThisLab(LabSpec):
             output_files = ['*.out', '*.cp', 'code-stats.csv','*.gprof', 'regression.out', 'out.png', 'regression.json'],
             default_cmd = ['make'],
             clean_cmd = ['make', 'clean'],
-            config_file = 'config.env',
             repo = "https://github.com/NVSL/CSE141pp-Lab-Test.git",
             reference_tag = "314bfbd09ab3a28b446742234851eeef2c29dcba",
-            time_limit = 50,
+            timeout = 10,
             valid_options = {
                 "USER_CMD_LINE":"",
                 "GPROF": "",
@@ -31,25 +34,6 @@ class ThisLab(LabSpec):
                 "DEVEL_MODE": ""
             }
         )
-
-    def post_run(self, result):
-        """
-        This gets called after your job completes.  You can build json and attach it to the `result.results` dict.
-        
-        Be sure to handle errors that might occur here.  For instance, if you
-        allow non-standard `make targets` you might not have the outputs you
-        expect.
-
-        """
-        
-        r = []
-        try:
-            r.append(dict(name='magic', value=self.csv_extract_by_line(result.files['code-stats.csv'], 'magic')))
-            r.append(dict(name='test_field', value="BOB"))
-        except:
-            pass
-        result.results['figures_of_merit'] = r
-        return result
 
     def filter_command(self, command):
         """
@@ -70,14 +54,33 @@ class ThisLab(LabSpec):
         # this is a helper that only allows simple calls to make.  Variables cannot be set.
         return self.make_target_filter(command)
 
-    class GradedRegressions(unittest.TestCase):
+    class GradedRegressions(CSE141Lab.GradedRegressions):
+
+        # the numbers in the name are improtant.  They set the order
+        # things run in.
+        @weight(1)
+        def test_0_regressions(self):
+            self.go_run_tests("")
 
         @weight(1)
-        def test_go(self):
-            try:
-                subprocess.check_call(["./run_tests.exe"],timeout=5)
-            except:
-                self.assertTrue(False)
+        def test_0_answer(self):
+            self.assertEqual(self.read_file('answer.out',root=".").strip(), "correct answer")
+
+        @leaderboard("winning")
+        def test_98_leaderboard(self, set_leaderboard_value=None):
+            set_leaderboard_value(self.csv_extract_by_line(result.files['code-stats.csv'], 'magic'))
+            
+    class MetaRegressions(CSE141Lab.MetaRegressions):
+
+        @parameterized.parameterized.expand([".", "solution"])
+        def test_solution(self, solution):
+            result = self.run_solution(solution)
+            js = result.results
+            log.debug(json.dumps(js, indent=4))
+            if solution == ".":
+                self.assertEqual(float(js['gradescope_test_output']['score']), 1)
+            elif solution == "solution":
+                self.assertEqual(float(js['gradescope_test_output']['score']), 2)
 
 
 

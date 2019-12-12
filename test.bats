@@ -17,7 +17,6 @@
     ! runlab  --no-validate --solution solution -- maek foo a=b
 }
 
-
 @test "runlab devel gprof" {
     make clean
     DEVEL_MODE=yes GPROF=yes runlab --no-validate --solution .
@@ -26,11 +25,8 @@
     [ "$(cat answer.out)" = 'student answer' ]
     [ "$(cat 1.out)" = '1' ]
     [ -e code.gprof ]
-    [ -e regression.out ]
-    [ -e regression.json ]
     [ -e out.png ]
     cmp in.png out.png
-    #grep -vq FAILED regression.out # gprof makes run_tests.exe segfault...
     grep -q WallTime code-stats.csv
 }
 
@@ -42,10 +38,7 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
-    [ -e regression.out ]
-    [ -e regression.json ]
-    grep -vq FAILED regression.out
-    grep -q magic results.json
+    grep -q winning results.json
     grep -q inst_count code-stats.csv
 }
 
@@ -56,7 +49,6 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
-    [ -e regression.out ]
     grep -vq inst_count code-stats.csv
 }
 
@@ -67,28 +59,9 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
-    [ -e regression.out ]
     grep -vq inst_count code-stats.csv
 }
 
-@test "runlab docker starter" {
-    runlab --no-validate  --devel --solution solution --docker --pristine
-    [ "$(cat opt_val.out)" = '1' ]
-    [ "$(cat protected.out)" = 'safe!' ]
-    [ "$(cat answer.out)" = 'correct answer' ]
-    [ "$(cat 1.out)" = 'a' ]
-    [ -e regression.out ]
-    grep -qv inst_count code-stats.csv
-}
-
-
-@test "runlab pipe starter code" {
-    runlab --no-validate  --devel --json --nop --solution . | runlab --run-json 
-    [ "$(cat protected.out)" = 'safe!' ]
-    [ "$(cat answer.out)" = 'student answer' ]
-    [ -e regression.out ]
-    grep -qv inst_count code-stats.csv
-}
 
 @test "runlab devel solution" {
     make clean
@@ -97,13 +70,7 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
     [ "$(cat 1.out)" = '1' ]
-    [ -e regression.out ]
-    grep -vq FAILED regression.out
     grep -q WallTime code-stats.csv
-    jextract gradescope_test_output < results.json
-    jextract gradescope_test_output execution_time  < results.json
-    [ "$(jextract gradescope_test_output score  < results.json)" == "1" ]
-    [ "$(jextract gradescope_test_output tests 0 score  < results.json)" == "1" ]
 }
 
 @test "make" {
@@ -115,7 +82,6 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'student answer' ]
     [ "$(cat 1.out)" = '1' ]
-    [ -e regression.out ]
     grep -q inst_count code-stats.csv
 }
 
@@ -128,19 +94,8 @@
     [ "$(cat protected.out)" = 'safe!' ]
     [ "$(cat answer.out)" = 'correct answer' ]
     [ "$(cat 1.out)" = 'a' ]
-    [ -e regression.out ]
     grep -q inst_count code-stats.csv
 }
-
-@test "make regression failure" {
-    make clean;
-    DEVEL_MODE=yes REGRESSION_FAIL=y make
-    [ "$(cat message.out)" = "yes devel" ]
-    [ "$(cat protected.out)" = 'safe!' ]
-    grep -q FAILED regression.out
-    grep -q WallTime code-stats.csv
-}
-
 
 @test "cloud running" {
     pushd $CONFIG_REPO_ROOT
@@ -149,14 +104,12 @@
     for CLOUD_MODE in EMULATION CLOUD; do
 	reconfig
 	runlab.d --just-once -v  &
+	sleep 1
 	runlab --devel --solution . --remote  
-	
 	[ "$(cat message.out)" = "yes devel" ]
 	[ "$(cat protected.out)" = 'safe!' ]
 	[ "$(cat answer.out)" = 'student answer' ]
 	[ "$(cat 1.out)" = '1' ]
-	[ -e regression.out ]
-	[ -e regression.json ]
 	[ -e out.png ]
 	cmp in.png out.png
 	grep -q WallTime code-stats.csv

@@ -1,12 +1,12 @@
 # sensible default
-default: all
-
+default: all run_tests.exe
 # this should not be alterable, because it's not allowed by lab.py
 PROTECTED_OPTION=safe!
 
 CLEANUP=*.out run_tests.exe out.png
 
 include $(ARCHLAB_ROOT)/cse141.make
+include $(BUILD)config.env
 
 # Implement an configuration option before loading build infrastructure
 ifeq ($(TEST_OPTION),first)
@@ -39,8 +39,8 @@ message.out:
 	echo $(MESSAGE) >> $@
 protected.out: 
 	echo $(PROTECTED_OPTION) >> $@
-answer.out: 
-	echo $(THE_ANSWER) >> $@
+answer.out:  $(BUILD)config.env
+	(. $<; echo $$THE_ANSWER) >> $@
 
 # consume an input
 1.out:$(BUILD)1.inp
