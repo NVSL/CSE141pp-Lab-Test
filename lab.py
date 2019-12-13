@@ -7,7 +7,7 @@ import unittest
 import subprocess
 import parameterized
 from gradescope_utils.autograder_utils.decorators import weight, leaderboard, partial_credit
-from ArchLab.CSE141Lab import CSE141Lab # The labs for the class have lots in common, so we have base class.
+from ArchLab.CSE141Lab import CSE141Lab, crossproduct, test_flags
 import logging as log
 import json
 
@@ -72,14 +72,17 @@ class ThisLab(CSE141Lab):
             
     class MetaRegressions(CSE141Lab.MetaRegressions):
 
-        @parameterized.parameterized.expand([".", "solution"])
-        def test_solution(self, solution):
-            result,tag = self.run_solution(solution)
+        @parameterized.parameterized.expand(crossproduct([["."],
+                                                          ["solution"]],
+                                                         test_flags))
+        def test_solution(self,*args, **kwargs):
+            result,tag = self.run_solution(*args,
+                                           **kwargs)
             js = result.results
             log.debug(json.dumps(js, indent=4))
-            if solution == ".":
+            if args[0] == ".":
                 self.assertEqual(float(js['gradescope_test_output']['score']), 1)
-            elif solution == "solution":
+            elif args[0] == "solution":
                 self.assertEqual(float(js['gradescope_test_output']['score']), 2)
 
 
