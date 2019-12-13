@@ -21,7 +21,7 @@ class ThisLab(CSE141Lab):
             default_cmd = ['make'],
             clean_cmd = ['make', 'clean'],
             repo = "https://github.com/NVSL/CSE141pp-Lab-Test.git",
-            reference_tag = "314bfbd09ab3a28b446742234851eeef2c29dcba",
+            reference_tag = "master",
             timeout = 10,
             valid_options = {
                 "USER_CMD_LINE":"",
