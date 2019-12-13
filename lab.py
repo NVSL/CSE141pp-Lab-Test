@@ -74,7 +74,7 @@ class ThisLab(CSE141Lab):
 
         @parameterized.parameterized.expand([".", "solution"])
         def test_solution(self, solution):
-            result = self.run_solution(solution)
+            result,tag = self.run_solution(solution)
             js = result.results
             log.debug(json.dumps(js, indent=4))
             if solution == ".":
