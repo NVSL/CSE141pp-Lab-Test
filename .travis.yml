@@ -1,0 +1,15 @@
+language: python
+services:
+ - docker
+
+env:
+ global:
+   - DOCKER_ACCESS_TOKEN=472ede77-61bd-48c8-8433-50dc2c6d704a
+   - DOCKER_USERNAME=stevenjswanson
+
+before_install:
+ - docker login  -p $DOCKER_ACCESS_TOKEN --username $DOCKER_USERNAME
+ - docker pull $DOCKER_USERNAME/cse141pp-dev:latest
+
+script:
+ - docker run -it --volume /var/run/docker.sock:/var/run/docker.sock -e HOME=/work/ --volume $PWD:/work --hostname test-dev -w /work --entrypoint /course/CSE141pp-Config/bin/run_configured.sh stevenjswanson/cse141pp-dev:latest make test
