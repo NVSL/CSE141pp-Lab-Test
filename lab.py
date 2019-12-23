@@ -12,7 +12,8 @@ import logging as log
 import json
 
 class ThisLab(CSE141Lab):
-    def __init__(self):
+
+    def __init__(self, **kwargs):
         super(ThisLab, self).__init__(
             lab_name = "A test lab",
             short_name = "test-lab",
@@ -20,9 +21,9 @@ class ThisLab(CSE141Lab):
             output_files = ['*.out', '*.cp', 'code-stats.csv','*.gprof', 'regression.out', 'out.png', 'regression.json'],
             default_cmd = ['make'],
             clean_cmd = ['make', 'clean'],
-            repo = "https://github.com/NVSL/CSE141pp-Lab-Test.git",
-            reference_tag = "master",
-            timeout = 10,
+            repo = kwargs.get("repo") or "https://github.com/NVSL/CSE141pp-Lab-Test.git",
+            reference_tag = kwargs.get("reference_tag") or "master",
+            timeout = 20,
             valid_options = {
                 "USER_CMD_LINE":"",
                 "GPROF": "",
@@ -54,22 +55,6 @@ class ThisLab(CSE141Lab):
         # this is a helper that only allows simple calls to make.  Variables cannot be set.
         return self.make_target_filter(command)
 
-    class GradedRegressions(CSE141Lab.GradedRegressions):
-
-        # the numbers in the name are improtant.  They set the order
-        # things run in.
-        @weight(1)
-        def test_0_regressions(self):
-            self.go_run_tests("")
-
-        @weight(1)
-        def test_0_answer(self):
-            self.assertEqual(self.read_file('answer.out',root=".").strip(), "correct answer")
-
-        @leaderboard("winning")
-        def test_98_leaderboard(self, set_leaderboard_value=None):
-            set_leaderboard_value(self.csv_extract_by_line(result.files['code-stats.csv'], 'magic'))
-            
     class MetaRegressions(CSE141Lab.MetaRegressions):
 
         @parameterized.parameterized.expand(crossproduct([["."],
@@ -84,6 +69,4 @@ class ThisLab(CSE141Lab):
                 self.assertEqual(float(js['gradescope_test_output']['score']), 1)
             elif args[0] == "solution":
                 self.assertEqual(float(js['gradescope_test_output']['score']), 2)
-
-
-
+                

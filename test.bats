@@ -27,3 +27,14 @@
     grep -vq inst_count code-stats.csv
 }
 
+
+@test "zip output" {
+    d=$(mktemp -d)
+    
+    runlab --no-validate --zip $d/t.zip
+    mkdir $d/t/
+    pushd $d/t
+    unzip $d/t.zip
+    [ -e opt_val.out ]
+    [ -e protected.out ]
+}
