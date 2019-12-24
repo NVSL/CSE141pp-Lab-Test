@@ -63,8 +63,9 @@ class ThisLab(CSE141Lab):
             log.debug(json.dumps(js, indent=4))
             if solution == ".":
                 if flags.grades_valid():
-                    self.assertEqual(float(js['gradescope_test_output']['score']), 1)
+                    self.assertEqual(float(js['gradescope_test_output']['score']), 0)
             elif solution == "solution":
                 if flags.grades_valid():                
-                    self.assertEqual(float(js['gradescope_test_output']['score']), 2)
-                
+                    self.assertEqual(float(js['gradescope_test_output']['score']), 1)
+                    self.assertEqual(float(js['gradescope_test_output']['leaderboard'][0]['value']), 4096)
+                    

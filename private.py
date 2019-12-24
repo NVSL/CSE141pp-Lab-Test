@@ -13,21 +13,13 @@ class ThisLab(PublicLab):
             PublicLab.GradedRegressions.setUp(self)
             self.lab_spec = ThisLab.load(".")
 
-
-        @weight(3)
-        def test_getting_this_far(self):
-            self.assertTrue(True)
-
-        @weight(3)
-        def test_for_correct_output(self):
-            with open("code.out") as f:
-                contents = f.read()
-            self.assertNotRegex(contents, 'Your Name', "I found 'Your Name' in your 'code.out'.  It shouldn't be there.")
-            self.assertRegex(contents, 'hi', "I couldn't find text match 'hi,' in your output")
-
         @weight(1)
-        def test_starter_output(self):
-            c = self.read_file("outputs/starter-output.txt")
-            self.assertRegex(c, "Hello, world!", "I couldn't find 'Hello, world!' in your 'outputs/starter-output.txt'")
+        def test_0_answer(self):
+            self.assertEqual(self.read_file('answer.out',root=".").strip(), "correct answer")
 
-
+        @leaderboard("winningest")
+        def test_98_leaderboard(self, set_leaderboard_value=None):
+            with open("code-stats.csv") as f:
+                c = f.read()
+                log.debug(self.lab_spec.csv_extract_by_line(c, 'magic'))
+                set_leaderboard_value(self.lab_spec.csv_extract_by_line(c, 'magic'))
