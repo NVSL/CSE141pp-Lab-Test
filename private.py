@@ -10,7 +10,7 @@ class ThisLab(PublicLab):
     # them and score the lab accordingly.
     class GradedRegressions(PublicLab.GradedRegressions):
         def setUp(self):
-            CSE141Lab.GradedRegressions.setUp(self)
+            PublicLab.GradedRegressions.setUp(self)
             self.lab_spec = ThisLab.load(".")
 
 
