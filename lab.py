@@ -56,12 +56,15 @@ class ThisLab(CSE141Lab):
         return self.make_target_filter(command)
 
     class MetaRegressions(CSE141Lab.MetaRegressions):
-        @parameterized.parameterized.expand(test_configs("solution", "."))
+        @parameterized.parameterized.expand(test_configs("solution", ".", "bad_solution"))
         def test_solution(self, solution, flags):
             result, tag = self.run_solution(solution, flags)
             js = result.results
             log.debug(json.dumps(js, indent=4))
             if solution == ".":
+                if flags.grades_valid():
+                    self.assertEqual(float(js['gradescope_test_output']['score']), 0)
+            elif solution == "bad_solution":
                 if flags.grades_valid():
                     self.assertEqual(float(js['gradescope_test_output']['score']), 0)
             elif solution == "solution":
