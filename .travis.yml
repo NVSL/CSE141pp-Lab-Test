@@ -6,10 +6,14 @@ env:
  global:
    - DOCKER_ACCESS_TOKEN=472ede77-61bd-48c8-8433-50dc2c6d704a
    - DOCKER_USERNAME=stevenjswanson
-
+   
 before_install:
  - docker login  -p $DOCKER_ACCESS_TOKEN --username $DOCKER_USERNAME
  - docker volume create staging
  
-script:
- - docker run -it --mount type=volume,source=staging,target=/staging --volume /var/run/docker.sock:/var/run/docker.sock -e HOME=/work/ --volume $PWD:/work --hostname test-dev -w /work --entrypoint /course/CSE141pp-Config/bin/run_configured.sh stevenjswanson/cse141pp-dev:latest make test
+job:
+  include:
+  - stage: lab-devel
+    script: docker run -it --env IN_TRAVIS_CI=yes --mount type=volume,source=staging,target=/staging --volume /var/run/docker.sock:/var/run/docker.sock -e HOME=/work/ --volume $PWD:/work --hostname test-dev -w /work --entrypoint /course/CSE141pp-Config/bin/run_configured.sh stevenjswanson/cse141pp-dev:latest make test
+  - stage: lab-deployed
+    script: docker run -it --env IN_TRAVIS_CI=yes --mount type=volume,source=staging,target=/staging --volume /var/run/docker.sock:/var/run/docker.sock -e HOME=/work/ --volume $PWD:/work --hostname test-dev -w /work --entrypoint /course/CSE141pp-Config/bin/run_configured.sh stevenjswanson/cse141pp-dev:latest make starter
