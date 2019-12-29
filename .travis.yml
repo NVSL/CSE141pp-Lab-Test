@@ -9,9 +9,11 @@ env:
    
 before_install:
  - docker login  -p $DOCKER_ACCESS_TOKEN --username $DOCKER_USERNAME
+ - docker pull $DOCKER_USERNAME/cse141pp-dev:latest
+ - docker pull $DOCKER_USERNAME/cse141pp-runner:latest
  - docker volume create staging
  
-job:
+jobs:
   include:
   - stage: lab-devel
     script: docker run -it --env IN_TRAVIS_CI=yes --mount type=volume,source=staging,target=/staging --volume /var/run/docker.sock:/var/run/docker.sock -e HOME=/work/ --volume $PWD:/work --hostname test-dev -w /work --entrypoint /course/CSE141pp-Config/bin/run_configured.sh stevenjswanson/cse141pp-dev:latest make test
