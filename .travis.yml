@@ -9,8 +9,6 @@ env:
 
 before_install:
  - docker login  -p $DOCKER_ACCESS_TOKEN --username $DOCKER_USERNAME
- - docker pull $DOCKER_USERNAME/cse141pp-dev:latest
- - docker pull $DOCKER_USERNAME/cse141pp-runner:latest
  - docker volume create staging
  
 script:

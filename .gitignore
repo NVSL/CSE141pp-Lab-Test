@@ -37,3 +37,5 @@ out.png
 exception
 .tmp
 .tmp
+STDERR.txt
+STDOUT.txt
