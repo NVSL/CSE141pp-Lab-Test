@@ -1,8 +1,7 @@
 from gradescope_utils.autograder_utils.decorators import weight, leaderboard, partial_credit
 import logging as log
-import os
-import sys
-from lab import ThisLab as PublicLab
+from ArchLab.CSE141Lab import load_public_lab
+PublicLab = load_public_lab(__file__)
 
 class ThisLab(PublicLab):
 
