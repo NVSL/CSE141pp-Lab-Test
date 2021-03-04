@@ -18,7 +18,7 @@ class ThisLab(PublicLab):
 
         @leaderboard("winningest")
         def test_98_leaderboard(self, set_leaderboard_value=None):
-            with open("code-stats.csv") as f:
+            with self.open_file("code-stats.csv") as f:
                 c = f.read()
                 log.debug(self.lab_spec.csv_extract_by_line(c, 'magic'))
                 set_leaderboard_value(self.lab_spec.csv_extract_by_line(c, 'magic'))
