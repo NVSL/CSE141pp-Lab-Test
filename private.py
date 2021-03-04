@@ -14,7 +14,7 @@ class ThisLab(PublicLab):
 
         @weight(1)
         def test_0_answer(self):
-            self.assertEqual(self.read_file('answer.out',root=".").strip(), "correct answer")
+            self.assertEqual(self.read_text_file('answer.out',root=".").strip(), "correct answer")
 
         @leaderboard("winningest")
         def test_98_leaderboard(self, set_leaderboard_value=None):
