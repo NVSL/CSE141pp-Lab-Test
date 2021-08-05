@@ -1,5 +1,5 @@
 .PHONY: default
-default: benchmark.csv run_tests.exe regressions.out regressions.json cnn.csv cnn.exe
+default: benchmark.csv  cnn.csv cnn.exe #run_tests.exe regressions.out regressions.json
 
 STUDENT_EDITABLE_FILES=opt_cnn.hpp test_file1
 
