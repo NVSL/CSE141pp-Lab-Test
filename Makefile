@@ -38,7 +38,7 @@ benchmark.csv: cnn.exe
 	./cnn.exe --run-canary --stats-file $@ --scale 4 --batch-size 4 --function train_model $(BENCHMARK_CMD_LINE)
 	pretty-csv $@
 
-cnn.csv: copy_files cnn.exe 
+cnn.csv: copy-files cnn.exe 
 	./cnn.exe --stats-file $@ $(FULL_CMD_LINE_ARGS)  --function fix_weights --test-layer 0 --scale 0
 	pretty-csv $@
 
