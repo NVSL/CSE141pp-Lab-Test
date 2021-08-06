@@ -35,7 +35,7 @@ $(BUILD)cnn.o: $(BUILD)opt_cnn.hpp  $(BUILD)opt_cnn.hpp $(BUILD)canary.hpp $(BUI
 OMP_NUM_THREADS=1
 export OMP_NUM_THREADS
 benchmark.csv: cnn.exe
-	./cnn.exe --run-canary --stats-file $@ --scale 4 --batch-size 4 --function train_model $(BENCHMARK_CMD_LINE)
+	./cnn.exe --run-canary --stats-file $@ --scale 0 --batch-size 1 --function train_model $(BENCHMARK_CMD_LINE)
 	pretty-csv $@
 
 cnn.csv: copy-files cnn.exe 
