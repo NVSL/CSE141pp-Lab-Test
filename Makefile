@@ -39,7 +39,7 @@ OMP_NUM_THREADS=1
 export OMP_NUM_THREADS
 benchmark.csv: cnn.exe
 	env
-	git revparse HEAD
+	git rev-parse HEAD
 	./cnn.exe --run-canary --stats-file $@ --scale 0 --batch-size 1 --function train_model $(BENCHMARK_CMD_LINE)
 	pretty-csv $@
 
