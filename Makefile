@@ -5,6 +5,9 @@ STUDENT_EDITABLE_FILES=opt_cnn.hpp test_file1
 
 OPENMP=yes
 
+ARCHLAB_AVAILABLE_CPU_FREQUENCIES=$(shell get-cpu-freqs)
+export ARCHLAB_AVAILABLE_CPU_FREQUENCIES
+
 OPTIMIZE=-march=x86-64 -O3
 CLEANUP=trace_traceme.hdf5 trace_cnn.hdf5
 COMPILER=gcc-8
